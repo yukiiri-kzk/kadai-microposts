@@ -13,17 +13,7 @@
           <% if current_user == micropost.user %>
             <%= link_to "Delete", micropost, method: :delete, data: { confirm: "You sure?" }, class: 'btn btn-danger btn-sm' %>
           <% end %>
-          <% if current_user.favorited?(micropost) %>
-            <%= form_with(model: current_user.favorites.find_by(micropost_id: micropost.id), local: true, method: :delete, class: "d-inline") do |f| %>
-              <%= hidden_field_tag :micropost_id, micropost.id %>
-              <%= f.submit 'unfavorite', class: 'btn btn-danger btn-sm' %>
-            <% end %>
-          <% else %>
-            <%= form_with(model: current_user.favorites.build, local: true, class: "d-inline") do |f| %>
-              <%= hidden_field_tag :micropost_id, micropost.id %>
-              <%= f.submit 'favorite', class: 'btn btn-primary btn-sm' %>
-            <% end %>
-          <% end %>
+          <%= render 'favorites/favorite_button', micropost: micropost %>
         </div>
       </div>
     </li>

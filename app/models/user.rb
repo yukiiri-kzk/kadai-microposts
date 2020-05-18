@@ -12,10 +12,10 @@ class User < ApplicationRecord
   has_many :reverses_of_relationship, class_name: 'Relationship', foreign_key: 'follow_id'
   has_many :followers, through: :reverses_of_relationship, source: :user
   #UserモデルからFavorite(中間テーブル)を見た時
-  has_many :favorites
+  has_many :favorites, dependent: :destroy 
   #Userモデルが中間テーブル(favorites)を経由してmicropostモデルに繋がっている
   #micropostsを一度使っているので、favorite_micropostsと別の言い方に変える
-  has_many :favorite_microposts, through: :favorites, source: :micropost
+  has_many :likes, through: :favorites, source: :micropost
   
   def follow(other_user)
     unless self == other_user
@@ -50,6 +50,6 @@ class User < ApplicationRecord
   #既にお気に入りに追加している Micropost かどうかを調べる処理
   #参照しているデータは中間テーブルを経由したmicropostsテーブル(self.favorite_micropostsにより複数のMicropostを取得)
   def favorited?(micropost)
-    self.favorite_microposts.include?(micropost)
+    self.likes.include?(micropost)
   end
 end
